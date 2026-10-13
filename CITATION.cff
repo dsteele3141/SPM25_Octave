@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below, and cite SPM itself."
+type: software
+title: "SPM25_Octave: running SPM25 in GNU Octave 11 on Linux"
+abstract: "Tested build scripts, a patch and validation for running SPM25 (Statistical Parametric Mapping) in a natively built GNU Octave 11, including the GUI, with results compared against MATLAB."
+authors:
+  - family-names: Steele
+    given-names: J. Douglas
+repository-code: "https://github.com/dsteele3141/SPM25_Octave"
+license: MIT
+date-released: 2026-10-13
+keywords:
+  - SPM
+  - SPM25
+  - GNU Octave
+  - neuroimaging
+  - MRI

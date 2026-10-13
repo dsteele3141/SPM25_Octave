@@ -1,0 +1,8 @@
+# build products and test outputs
+*.log
+*.mex
+validation/octave/
+validation/matlab/
+*.nii
+*.nii.gz
+__pycache__/

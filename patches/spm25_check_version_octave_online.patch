@@ -1,0 +1,19 @@
+diff --git a/spm_check_version.m b/spm_check_version.m
+index 0eadfbb..e0caadf 100644
+--- a/spm_check_version.m
++++ b/spm_check_version.m
+@@ -104,6 +104,14 @@ function varargout = spm_check_version(tbx,chk)
+ %-Parse user supplied version number
+ %==========================================================================
+ 
++% Octave fix (already in SPM main / 26.10): the MATLAB Online check must come
++% before the Octave hack below, otherwise Octave is reported as MATLAB Online
++% and spm('WinSize') halves the screen size (small SPM windows).
++if strcmpi(tbx,'matlab') && strcmpi(chk,'online')
++    varargout = {logical(exist(fullfile(filesep, 'MATLAB Drive'), 'dir'))};
++    return;
++end
++
+ if strcmpi(tbx,'matlab') && strcmpi(spm_check_version,'octave')
+     varargout = {1}; % hack
+     return;
