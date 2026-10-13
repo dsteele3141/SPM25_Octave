@@ -13,8 +13,9 @@ SPM itself isn't included: the scripts download it from the official [spm/spm](h
 
 ## Status
 
-- **Tested on:** Ubuntu 22.04 / Linux Mint 21.3, with Octave 11.3.0 and SPM 25.01.02.
-- **Octave test suite:** 22,330 passed, 0 failed.
+- **Tested on:** Ubuntu 22.04 / Linux Mint 21.3, with Octave 11.3.0 and SPM 25.01.02. Tested on two computers (Intel i7-13700 and AMD Ryzen 7 3700X); the second was a fresh install using only these scripts.
+- **Octave test suite:** 22,330 passed, 0 failed (22,329 / 0 on the AMD computer).
+- **Same results on both computers:** the segmentation tissue maps are byte-for-byte identical.
 - **SPM25 segmentation vs MATLAB R2026a:** grey/white matter/CSF volumes within 0.05/0.12/0.33%, r > 0.9999. Octave took 34 s, MATLAB 44 s. Details are in [validation/RESULTS.md](validation/RESULTS.md).
 - **GUI:** `spm fmri`, Display, Check Reg, overlays, file selector and the batch editor all work.
 

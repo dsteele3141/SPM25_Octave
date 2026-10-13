@@ -38,6 +38,17 @@ The small Octave/MATLAB differences come from different numerical libraries insi
 - The batch system ran a smoothing job through `spm_jobman`.
 - **GUI** (Octave Qt GUI): `spm fmri` and its buttons, `spm_image`, `spm_check_registration` including coloured overlays, `spm_select`, and `spm_jobman('interactive')` all work, with correct window sizes after the patch in `patches/`.
 
+## 4. Second machine: fresh install on an AMD CPU
+
+All four scripts were run unchanged on a second computer, which had no Octave before. It runs Linux Mint 21.3 on an AMD Ryzen 7 3700X (8 cores, 16 threads).
+- **Step 1** found one conflicting package (an old `libjpeg62-dev`), stopped, and went ahead only with `ALLOW_REMOVE=1`. The system BLAS/LAPACK and HDF5 defaults were unchanged afterwards.
+- **Steps 2–4** ran without errors. OpenBLAS used its Zen kernel with `USE_OPENMP`, all 128 MEX files were built, and the launcher picked 8 threads (one per physical core).
+- **Octave test suite:** 22,329 passed, 0 failed, 34 XFAIL. The one extra XFAIL is a `gsvd` accuracy test that upstream already marks as a known bug (#48807); it misses its tolerance by 4×10⁻¹⁶.
+- **Segmentation:**
+  - The grey matter, white matter and CSF maps are **byte-for-byte identical** to the first machine (Intel i7-13700). The comparison with MATLAB is therefore the same as in section 2.
+  - The deformation fields differ by at most 0.003 mm.
+  - Run time was 63 s, against 34 s on the newer Intel CPU.
+
 ## Reproduce
 
 ```bash

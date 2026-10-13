@@ -61,3 +61,9 @@ This only happens if you compile with a non-system GCC 15 (for example from Home
 `01_install_build_deps.sh` does a dry run first and never removes anything unless you allow it. One case seen in testing: an old, manually installed **`libjpeg62-dev`** conflicts with `libjpeg-dev`, which HDF5, GraphicsMagick and SUNDIALS need.
 - Removing a `-dev` package doesn't affect installed programs; their runtime libraries stay. It only matters if you later compile something that needs those specific headers.
 - Check with `apt-cache rdepends --installed <package>`, then re-run with `ALLOW_REMOVE=1`.
+
+## The test suite stops at `jupyter-notebook.tst` ("element number 1 undefined in return list")
+
+This happens when Octave has **no graphics toolkit available**: for example over SSH with no display, on a computer without `gnuplot`. That upstream test doesn't handle this case, and its error ends the whole test run. The build itself is fine.
+
+To avoid it, run the test suite from a desktop terminal, with any display set (`DISPLAY=:0`, or a virtual X server), or install `gnuplot`.

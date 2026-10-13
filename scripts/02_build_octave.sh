@@ -55,4 +55,5 @@ echo "Compiling with $JOBS jobs (a few minutes on a modern desktop)..."
 echo
 echo "Installed to $PREFIX"
 echo "Next: bash scripts/03_build_spm25.sh   and   bash scripts/04_install_launchers.sh"
-echo "Optional full self-test (about 5 minutes):  OMP_WAIT_POLICY=PASSIVE $PREFIX/bin/octave-cli --eval __run_test_suite__"
+echo "Optional full self-test (about 5 minutes; run it from a desktop terminal, not a headless SSH session):"
+echo "  OMP_WAIT_POLICY=PASSIVE $PREFIX/bin/octave-cli --eval __run_test_suite__"
