@@ -55,3 +55,9 @@ PortAudio is optional (`WITH_PORTAUDIO=1`). On many desktops `portaudio19-dev` p
 ## GCC 15 errors when compiling SPM ("too many arguments to function")
 
 This only happens if you compile with a non-system GCC 15 (for example from Homebrew), because its default C23 standard rejects SPM's older C. Use the system GCC (as the scripts do), or add `CFLAGS="-std=gnu17"`.
+
+## Step 1 stops: "would REMOVE these installed packages"
+
+`01_install_build_deps.sh` does a dry run first and never removes anything unless you allow it. One case seen in testing: an old, manually installed **`libjpeg62-dev`** conflicts with `libjpeg-dev`, which HDF5, GraphicsMagick and SUNDIALS need.
+- Removing a `-dev` package doesn't affect installed programs; their runtime libraries stay. It only matters if you later compile something that needs those specific headers.
+- Check with `apt-cache rdepends --installed <package>`, then re-run with `ALLOW_REMOVE=1`.

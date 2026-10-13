@@ -6,7 +6,8 @@
 #   WITH_PORTAUDIO=1 bash scripts/01_install_build_deps.sh   # also audioplayer/audiorecorder
 #
 # Safety:
-#  * --no-remove: apt aborts rather than remove anything already installed.
+#  * Nothing already installed is removed: a dry run lists any conflicting
+#    packages and the script stops unless ALLOW_REMOVE=1 is set.
 #  * The system BLAS/LAPACK and HDF5 defaults (update-alternatives) are recorded
 #    first and restored afterwards, so other software (e.g. R) is unaffected.
 #    Installing libsundials-dev pulls in MPI-HDF5 and would otherwise switch the
@@ -36,7 +37,25 @@ command -v pkg-config >/dev/null || pkgs+=(pkgconf)
 [ "${WITH_PORTAUDIO:-0}" = 1 ] && pkgs+=(portaudio19-dev)
 
 sudo apt-get update
-sudo apt-get install -y --no-remove "${pkgs[@]}"
+
+# Dry run first: report any package apt would have to REMOVE (conflicts), and
+# stop unless the user explicitly allows it. Example seen in testing: an old
+# manually installed libjpeg62-dev conflicts with libjpeg-dev (needed by HDF5).
+removals=$(apt-get install -s "${pkgs[@]}" 2>/dev/null | awk '/^Remv/{print $2}')
+if [ -n "$removals" ]; then
+  echo
+  echo "Installing the build dependencies would REMOVE these installed packages:"
+  printf '   %s\n' $removals
+  echo "Check nothing you need depends on them:  apt-cache rdepends --installed <package>"
+  if [ "${ALLOW_REMOVE:-0}" != 1 ]; then
+    echo "Nothing has been changed. To proceed anyway, re-run with:  ALLOW_REMOVE=1 bash $0"
+    exit 1
+  fi
+  echo "ALLOW_REMOVE=1 set: proceeding."
+  sudo apt-get install -y "${pkgs[@]}"
+else
+  sudo apt-get install -y --no-remove "${pkgs[@]}"
+fi
 
 # Restore previous defaults (only where one existed before)
 for a in $alts; do
