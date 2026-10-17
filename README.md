@@ -55,7 +55,7 @@ All locations can be changed with environment variables (`PREFIX`, `OCTAVE_VERSI
 | `scripts/01_install_build_deps.sh` | Build dependencies. Uses `--no-remove`, and keeps the system BLAS/HDF5 defaults unchanged |
 | `scripts/02_build_octave.sh` | Signature-verified Octave source build: Qt5 GUI, OpenMP OpenBLAS via RPATH, serial HDF5 |
 | `scripts/03_build_spm25.sh` | SPM25 clone, the Octave patches, the release version stamp, and all 128 MEX files |
-| `scripts/04_install_launchers.sh` | `octave`/`octave-cli` launchers (`OMP_WAIT_POLICY=PASSIVE`, one thread per physical core) and the desktop entry |
+| `scripts/04_install_launchers.sh` | `octave`/`octave-cli` launchers (`OMP_WAIT_POLICY=PASSIVE`, one thread per physical core, conda's `QT_XCB_GL_INTEGRATION` cleared) and the desktop entry |
 | `patches/` | Octave fixes for SPM25: small/misplaced windows (already in SPM main), and the Help button opening the web browser |
 | `octave/spm25_setup.m` | Puts SPM25 on the path after removing any other SPM version, and hides a harmless `.fig` loading warning |
 | `tools/nii_view.m`, `tools/nii_read.m` | A small SPM-style orthogonal NIfTI viewer and reader that don't need SPM (`.nii`/`.nii.gz`) |

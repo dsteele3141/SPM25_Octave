@@ -23,6 +23,14 @@ These problems were all hit while setting this up on Ubuntu 22.04 / Linux Mint 2
 
 **Fix (in `04_install_launchers.sh`):** start Octave with `OMP_WAIT_POLICY=PASSIVE` and `OMP_NUM_THREADS` = the number of physical cores. Both must be set **before** Octave starts; setting them inside Octave is too late.
 
+## SPM or other figure windows are blank or black
+
+**Symptom:** figure windows open with the right title and size but show nothing inside (black over remote desktop, white or black locally). The Octave main window looks normal. Octave started from a terminal over SSH may work fine.
+
+**Cause:** a conda environment is active in the desktop session, for example Anaconda's base environment activated system-wide from `/etc/profile.d/conda.sh`. Conda's Qt package sets `QT_XCB_GL_INTEGRATION=none`, and every program started from the desktop inherits it. Octave draws figure contents with OpenGL through Qt, so nothing is drawn. Check with `getenv('QT_XCB_GL_INTEGRATION')` in Octave: it should be empty.
+
+**Fix:** the launchers from `04_install_launchers.sh` clear this variable before starting Octave. If you start Octave another way, run `unset QT_XCB_GL_INTEGRATION` first.
+
 ## SPM windows are small and stuck in the bottom-left corner
 
 **Cause:** a bug in SPM25 under Octave. `spm_check_version('matlab','online')` returns true because of an Octave shortcut in the same function, so SPM thinks it's running in *MATLAB Online* and halves the screen size when placing its windows.

@@ -9,6 +9,8 @@
 # operations become 10-20x slower (e.g. eig of a 2000x2000 matrix: 104 s vs 6 s).
 # OMP_WAIT_POLICY=PASSIVE fixes this; one thread per physical core avoids
 # hyper-thread contention. Both must be set before Octave starts.
+# The launchers also clear QT_XCB_GL_INTEGRATION (set by conda; see
+# docs/TROUBLESHOOTING.md), which otherwise gives blank/black figure windows.
 set -euo pipefail
 
 OCTAVE_PREFIX=${OCTAVE_PREFIX:-$HOME/opt/octave-11.3.0}
@@ -24,6 +26,10 @@ cores=\$(lscpu -p=core,socket 2>/dev/null | grep -v '^#' | sort -u | wc -l)
 [ "\${cores:-0}" -gt 0 ] || cores=\$(nproc)
 export OMP_WAIT_POLICY=\${OMP_WAIT_POLICY:-PASSIVE}
 export OMP_NUM_THREADS=\${OMP_NUM_THREADS:-\$cores}
+# A conda environment active in the desktop session (e.g. base activated from
+# /etc/profile.d) sets QT_XCB_GL_INTEGRATION=none, which leaves figure windows
+# blank or black. Octave's own Qt needs OpenGL, so clear it.
+unset QT_XCB_GL_INTEGRATION
 exec "$OCTAVE_PREFIX/bin/$b" "\$@"
 EOF
   chmod +x "$BIN_DIR/$b"
