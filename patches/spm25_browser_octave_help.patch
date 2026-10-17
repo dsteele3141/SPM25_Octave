@@ -1,0 +1,13 @@
+diff --git a/spm_browser.m b/spm_browser.m
+index 9459575..642674b 100644
+--- a/spm_browser.m
++++ b/spm_browser.m
+@@ -35,7 +35,7 @@ function spm_browser(url,format)
+     if strcmpi(format,'md')
+         url = md2html(url);
+     end
+-    if ~isdeployed
++    if ~isdeployed && ~exist('OCTAVE_VERSION','builtin')  % Octave's web() can't show text://
+         url = ['text://' url];
+         web(url,'-notoolbar','-noaddressbox');
+     else

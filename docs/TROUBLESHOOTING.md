@@ -29,6 +29,30 @@ These problems were all hit while setting this up on Ubuntu 22.04 / Linux Mint 2
 
 **Fix:** `patches/spm25_check_version_octave_online.patch`, which `03_build_spm25.sh` applies. SPM's main branch (26.10) already includes the same fix.
 
+## The SPM Help button does nothing
+
+**Cause:** SPM shows its help page (a Markdown file converted to HTML) in MATLAB's built-in browser by passing a `text://` address to `web`. Octave has no built-in browser: its `web` hands every address to the system, which can't open `text://`, so nothing happens.
+
+**Fix:** `patches/spm25_browser_octave_help.patch`, which `03_build_spm25.sh` applies. Under Octave, SPM writes the help page to a temporary `.html` file and opens it in your default web browser, as it already does in compiled (standalone) SPM. MATLAB behaviour is unchanged.
+
+## Warnings: "object of class 'function_handle_workspace' was deleted in MATLAB and cannot be loaded"
+
+**Symptom:** several of these warnings, called from `hgload` / `openfig` / `cfg_ui`, appear when the batch editor opens (`spm_jobman('interactive')` or any batch button). The window works normally.
+
+**Cause:** the batch editor's layout file `cfg_ui.fig` was saved by MATLAB and contains MATLAB-internal data that Octave 11 skips. The warning is harmless.
+
+**Fix:** `spm25_setup` turns off this warning (`warning('off','Octave:load:deleted-object')`).
+
+## Typing `spm` goes straight to the fMRI windows instead of the welcome screen
+
+**Cause:** SPM skips the welcome screen when a modality has already been chosen, and `spm('defaults','fmri')` chooses fMRI. So anything that runs it first (for example a start-up file) has this effect. MATLAB behaves the same way.
+
+**Fix:** at start-up, only put SPM on the path (`spm25_setup('~/opt/spm25')` without `'init'`).
+
+## `spm` is "undefined"
+
+Octave function names are case-sensitive, as in MATLAB on Linux: type `spm`, not `SPM`. (The modality can be in any case: `spm fMRI` works.)
+
 ## `spm('Version')` says "SPM25 (00.00)"
 
 **Cause:** the git tag contains a placeholder. The real version line is only written into the official release zip.

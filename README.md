@@ -41,8 +41,10 @@ Then, in Octave (GUI from the menu, or `octave` in a terminal):
 ```octave
 addpath('/path/to/SPM25_Octave/octave')
 spm25_setup('~/opt/spm25')      % -> "SPM25 (25.01.02) ready"
-spm fmri
+spm                             % welcome screen, as in MATLAB (or: spm fmri)
 ```
+
+To have SPM25 on the path in every session, put the first two lines in `~/.octaverc`. This only sets the path; SPM itself starts when you type `spm`. In batch scripts, use `spm25_setup('~/opt/spm25', 'init')` to also load the fMRI defaults and the batch system.
 
 All locations can be changed with environment variables (`PREFIX`, `OCTAVE_VERSION`, `SPM_DIR`, `SPM_TAG`, `OCTAVE_PREFIX`, `BIN_DIR`); see the top of each script.
 
@@ -52,10 +54,10 @@ All locations can be changed with environment variables (`PREFIX`, `OCTAVE_VERSI
 |---|---|
 | `scripts/01_install_build_deps.sh` | Build dependencies. Uses `--no-remove`, and keeps the system BLAS/HDF5 defaults unchanged |
 | `scripts/02_build_octave.sh` | Signature-verified Octave source build: Qt5 GUI, OpenMP OpenBLAS via RPATH, serial HDF5 |
-| `scripts/03_build_spm25.sh` | SPM25 clone, the Octave patch, the release version stamp, and all 128 MEX files |
+| `scripts/03_build_spm25.sh` | SPM25 clone, the Octave patches, the release version stamp, and all 128 MEX files |
 | `scripts/04_install_launchers.sh` | `octave`/`octave-cli` launchers (`OMP_WAIT_POLICY=PASSIVE`, one thread per physical core) and the desktop entry |
-| `patches/` | Fix for small/misplaced SPM windows under Octave (already in SPM main) |
-| `octave/spm25_setup.m` | Puts SPM25 on the path after removing any other SPM version |
+| `patches/` | Octave fixes for SPM25: small/misplaced windows (already in SPM main), and the Help button opening the web browser |
+| `octave/spm25_setup.m` | Puts SPM25 on the path after removing any other SPM version, and hides a harmless `.fig` loading warning |
 | `tools/nii_view.m`, `tools/nii_read.m` | A small SPM-style orthogonal NIfTI viewer and reader that don't need SPM (`.nii`/`.nii.gz`) |
 | `validation/` | Octave-vs-MATLAB segmentation test, comparison script and results |
 | `docs/TROUBLESHOOTING.md` | Why each step is needed: crashes, slowdowns and package-manager pitfalls |
@@ -68,11 +70,11 @@ All locations can be changed with environment variables (`PREFIX`, `OCTAVE_VERSI
 
 ## Acknowledgements
 
-SPM is developed by the SPM team at the Department of Imaging Neuroscience (formerly the Wellcome Centre for Human Neuroimaging), UCL Queen Square Institute of Neurology. Their Octave support in the SPM code and build system made this possible, and the Octave fix used here is already in SPM's main branch. GNU Octave is developed by John W. Eaton and the Octave community. This repository only packages, patches and validates their work for a native Octave 11 installation.
+SPM is developed by the SPM team at the Department of Imaging Neuroscience (formerly the Wellcome Centre for Human Neuroimaging), UCL Queen Square Institute of Neurology. Their Octave support in the SPM code and build system made this possible, and the window-size fix used here is already in SPM's main branch. GNU Octave is developed by John W. Eaton and the Octave community. This repository only packages, patches and validates their work for a native Octave 11 installation.
 
 ## Licence
 
-The scripts and tools in this repository are under the MIT Licence (see `LICENSE`). SPM is © the SPM developers under GPL-2.0-or-later and isn't redistributed here. The patch in `patches/` modifies SPM and is provided under SPM's licence.
+The scripts and tools in this repository are under the MIT Licence (see `LICENSE`). SPM is © the SPM developers under GPL-2.0-or-later and isn't redistributed here. The patches in `patches/` modify SPM and is provided under SPM's licence.
 
 ## Citation
 

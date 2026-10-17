@@ -21,10 +21,12 @@ if [ ! -d "$SPM_DIR/.git" ]; then
 fi
 cd "$SPM_DIR"
 
-# 2. Octave fix: correct SPM window sizes (see patches/)
-P=$HERE/patches/spm25_check_version_octave_online.patch
-if git apply --check "$P" 2>/dev/null; then git apply "$P"; echo "Applied $(basename "$P")";
-else echo "Patch already applied (or not needed)"; fi
+# 2. Octave fixes (see patches/ and docs/TROUBLESHOOTING.md):
+#    window sizes, and the Help button opening the system web browser
+for P in "$HERE"/patches/*.patch; do
+  if git apply --check "$P" 2>/dev/null; then git apply "$P"; echo "Applied $(basename "$P")";
+  else echo "$(basename "$P"): already applied (or not needed)"; fi
+done
 
 # 3. Version stamp: the git tag has a 'Version 00.00' placeholder; the official
 #    release zip carries the real one (spm('Version') -> 'SPM25 (25.01.02)').

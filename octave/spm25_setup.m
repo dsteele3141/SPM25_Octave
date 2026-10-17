@@ -1,12 +1,20 @@
-function spm25_setup (spm_dir)
-  ## SPM25_SETUP  Put SPM25 on the Octave path and initialise it.
+function spm25_setup (spm_dir, varargin)
+  ## SPM25_SETUP  Put SPM25 on the Octave path.
   ##
-  ##   spm25_setup ('~/opt/spm25')
+  ##   spm25_setup ('~/opt/spm25')           % path only; then type spm or spm fmri
+  ##   spm25_setup ('~/opt/spm25', 'init')   % also load fMRI defaults + batch system
   ##
   ## Removes any other SPM version from the path first (SPM versions share
-  ## function names), then sets fMRI defaults and initialises the batch system.
+  ## function names). By default nothing else is run, as in MATLAB after
+  ## addpath: "spm" then shows the welcome screen. With 'init' it also runs
+  ## spm('defaults','fmri') and spm_jobman('initcfg') (useful in scripts), but
+  ## plain "spm" then goes straight to the fMRI windows.
+  ##
+  ## Also turns off a harmless Octave 11 warning printed when SPM opens
+  ## MATLAB-saved .fig files such as the batch editor ("object of class
+  ## 'function_handle_workspace' was deleted in MATLAB").
 
-  if (nargin < 1)
+  if (nargin < 1 || isempty (spm_dir))
     spm_dir = fullfile (getenv ('HOME'), 'opt', 'spm25');
   endif
   spm_dir = make_absolute_filename (tilde_expand (spm_dir));
@@ -30,7 +38,10 @@ function spm25_setup (spm_dir)
   endif
 
   addpath (spm_dir);
-  spm ('defaults', 'fmri');
-  spm_jobman ('initcfg');
+  warning ('off', 'Octave:load:deleted-object');
+  if (any (strcmpi (varargin, 'init')))
+    spm ('defaults', 'fmri');
+    spm_jobman ('initcfg');
+  endif
   printf ('%s ready (%s)\n', spm ('Version'), spm_dir);
 endfunction
